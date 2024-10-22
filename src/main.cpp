@@ -8,19 +8,17 @@
 #include <boost/algorithm/string.hpp>
 
 void usage() {
-    SPDLOG_ERROR("Usage: ./FASSolver <path/to/graph> [algorithm (greedy | sort | pagerank)]\n");
     exit(1);
 }
 
 int main(int argc, char** argv) {
-    if (argc != 3) {
+    if (argc != 2) {
         usage();
     }
 
     createDirectoryIfNotExists("result");
 
     fs::path graph_path(argv[1]);
-    std::string algorithm(argv[2]);
 
     std::vector<std::string> graph_path_split;
     boost::split(graph_path_split, graph_path.string(), boost::is_any_of("/"));
@@ -35,12 +33,12 @@ int main(int argc, char** argv) {
         draw_graph("result/simple.dot", edges);
     }
 
-    FASContext context(algorithm);
+    FASContext context;
 
     auto result = context.getFeedbackArcSet(graph_path.string());
     std::vector<std::string> result_str;
     boost::split(result_str, graph_path_split.back(), boost::is_any_of("."));
-    write_result("result/" + result_str[0] + "_" + algorithm + ".txt", result);
+    write_result("result/" + result_str[0] + ".txt", result);
 
     // 从edges中删除result
     if (is_simple) {

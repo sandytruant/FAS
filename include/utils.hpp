@@ -8,20 +8,15 @@ void createDirectoryIfNotExists(const std::string &path) {
     fs::path dirPath(path);
     if (!fs::exists(dirPath)) {
         if (!fs::create_directory(dirPath)) {
-            SPDLOG_ERROR("Failed to create directory: {}", path);
             exit(1);
         }
     } else if (!fs::is_directory(dirPath)) {
-        SPDLOG_ERROR("Path exists, but is not a directory: {}", path);
         exit(1);
     }
 }
 
 void read_edges(std::string input, std::vector<std::pair<int, int>> &edges, int &n) {
     FILE* file = fopen(input.c_str(), "r");
-    if (file == NULL) {
-        SPDLOG_ERROR("Open file {} failed.", input);
-    }
     int u, v;
     while (fscanf(file, "%d,%d", &u, &v) != EOF) {
         edges.emplace_back(std::make_pair(u, v));
@@ -41,7 +36,6 @@ void draw_graph(const std::string &path, std::vector<std::pair<int, int>> edges)
     // 如果不存在则创建
     FILE *fp = fopen(path.c_str(), "w");
     if (fp == nullptr) {
-        SPDLOG_ERROR("Failed to open file: {}", path);
         exit(1);
     }
     fprintf(fp, "%s", graphviz.c_str());
@@ -52,7 +46,6 @@ void write_result(const std::string &path, std::vector<std::pair<int, int>> &res
     // 如果不存在则创建
     FILE *fp = fopen(path.c_str(), "w");
     if (fp == nullptr) {
-        SPDLOG_ERROR("Failed to open file: {}", path);
         exit(1);
     }
     fprintf(fp, "%lu\n", result.size());

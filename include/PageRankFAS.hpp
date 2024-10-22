@@ -1,7 +1,5 @@
 #ifndef __PAGERANK_FAS_HPP__
 #define __PAGERANK_FAS_HPP__
-#include "strategy.h"
-#include "spdlog_common.h"
 #include "hash_table7.hpp"
 #include "hash_set8.hpp"
 #include "utils.hpp"
@@ -46,10 +44,9 @@ public:
     }
 };
 
-class PageRankFAS : public FASStrategy {
+class PageRankFAS {
 public:
-    std::vector<std::pair<int, int>> getFeedbackArcSet(const std::string &input) override {
-        SPDLOG_INFO("Starting PageRankFAS...");
+    std::vector<std::pair<int, int>> getFeedbackArcSet(const std::string &input) {
         std::vector<std::pair<int, int>> edges;
         int n = 0;
         read_edges(input, edges, n);
@@ -67,11 +64,6 @@ public:
         while (true) {
             auto end = std::chrono::steady_clock::now();
             duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-            // 每100次循环打印一次
-            if ((cnt++) % 100 == 0) {
-                SPDLOG_INFO("Graph is cyclic. Current FAS number: {}, Time Elapsed: {} s, Computing FAS...",
-                            fas.size(), duration / 1000.0);
-            }
 
             // 求图G的强连通分量
             std::vector<emhash8::HashSet<int>> sccs;
@@ -146,7 +138,6 @@ public:
         
         auto end = std::chrono::steady_clock::now();
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-        SPDLOG_INFO("Successfully compute FAS, FAS number: {}, Time Elapsed: {}s", fas.size(), duration / 1000.0);
         return fas;
     }
 private:
